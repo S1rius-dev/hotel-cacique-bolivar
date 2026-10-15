@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#7c1d1d"/>
+  <rect x="0" y="0" width="1200" height="630" fill="url(#grad)" opacity="0.3"/>
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.6"/>
+    </linearGradient>
+  </defs>
+  <text x="600" y="260" font-family="Georgia, serif" font-size="68" font-weight="bold" fill="#fff" text-anchor="middle">Hotel Cacique de Bolivar</text>
+  <text x="600" y="330" font-family="Arial, sans-serif" font-size="26" fill="#e8d5c4" text-anchor="middle">Amalfi, Antioquia</text>
+  <line x1="480" y1="360" x2="720" y2="360" stroke="#c9a84c" stroke-width="2"/>
+  <text x="600" y="400" font-family="Arial, sans-serif" font-size="20" fill="#e8d5c4" text-anchor="middle">Reserva ahora · +57 300 0000000</text>
+</svg>

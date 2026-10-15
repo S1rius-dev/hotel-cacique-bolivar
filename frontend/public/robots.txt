@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Flujos de pago y panel interno: nunca indexables.
+Disallow: /pago
+Disallow: /pago/
+Disallow: /dashboard
+Disallow: /dashboard/
+Disallow: /hotel
+Disallow: /mi-perfil
+Disallow: /mis-reservas
+
+# Disallow no equivale a noindex: una URL bloqueada que se encuentre por un
+# enlace se muestra en el índice como "Bloqueada por robots.txt". Por eso esas
+# páginas llevan además <meta name="robots" content="noindex, nofollow">.
+
+Sitemap: https://demo.example.com/sitemap.xml

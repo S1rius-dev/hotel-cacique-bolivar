@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Reserva Cancelada</title>
+</head>
+<body style="margin:0;padding:0;background-color:#fafaf9;font-family:Inter,'Segoe UI',Arial,sans-serif;">
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#fafaf9;">
+    <tr>
+      <td align="center" style="padding:24px 10px;">
+
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+          <!-- HEADER -->
+          <tr th:insert="layout :: header"></tr>
+
+          <!-- BADGE -->
+          <tr th:insert="~{layout :: badge('Reserva Cancelada')}"></tr>
+
+          <!-- CONTENT -->
+          <tr>
+            <td style="background-color:#ffffff;padding:0 24px 20px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="text-align:center;padding-bottom:20px;">
+                    <h1 style="font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-size:26px;color:#292524;font-weight:600;margin:0;letter-spacing:-0.3px;">Reserva cancelada</h1>
+                    <p style="font-family:Inter,'Segoe UI',Arial,sans-serif;font-size:15px;color:#57534e;margin:8px 0 0;line-height:1.6;">
+                      Hola <strong style="color:#292524;" th:text="${data.recipientName}">Nombre</strong>, te confirmamos que tu reserva ha sido cancelada seg&uacute;n lo solicitado.
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="text-align:center;padding-bottom:24px;">
+                    <span style="font-family:Consolas,'Courier New',monospace;font-size:14px;color:#e11d48;background-color:#fff1f2;padding:6px 14px;border-radius:6px;letter-spacing:0.5px;" th:text="${data.codigoReserva}">COD-123</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-bottom:24px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e5e7eb;border-radius:12px;">
+                      <tr>
+                        <td style="padding:20px;">
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td style="padding-bottom:12px;">
+                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                                  <tr>
+                                    <td style="font-family:Inter,'Segoe UI',Arial,sans-serif;font-size:11px;color:#a8a29e;text-transform:uppercase;letter-spacing:1px;padding-bottom:4px;">Fecha de cancelaci&oacute;n</td>
+                                  </tr>
+                                  <tr>
+                                    <td style="font-family:Inter,'Segoe UI',Arial,sans-serif;font-size:15px;color:#292524;font-weight:500;" th:text="${#temporals.format(data.fechaCancelacion, 'dd MMM yyyy HH:mm', new java.util.Locale('es','CO'))}">15 Jul 2026</td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                            <tr th:if="${data.totalReembolsado != null and data.totalReembolsado.signum() > 0}">
+                              <td>
+                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#fafaf9;border-radius:8px;padding:14px 16px;">
+                                  <tr>
+                                    <td style="font-family:Inter,'Segoe UI',Arial,sans-serif;font-size:14px;color:#292524;font-weight:500;">Total reembolsado</td>
+                                    <td style="text-align:right;font-family:Inter,'Segoe UI',Arial,sans-serif;font-size:18px;color:#16a34a;font-weight:700;" th:text="${#numbers.formatDecimal(data.totalReembolsado, 1, 'POINT', 2, 'COMMA') + ' COP'}">$0.00</td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                            <tr th:if="${data.motivo != null and !data.motivo.isEmpty()}">
+                              <td style="padding-top:16px;">
+                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                                  <tr>
+                                    <td style="font-family:Inter,'Segoe UI',Arial,sans-serif;font-size:11px;color:#a8a29e;text-transform:uppercase;letter-spacing:1px;padding-bottom:4px;">Motivo</td>
+                                  </tr>
+                                  <tr>
+                                    <td style="font-family:Inter,'Segoe UI',Arial,sans-serif;font-size:14px;color:#57534e;line-height:1.5;" th:text="${data.motivo}">Cancelaci&oacute;n solicitada por el cliente</td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family:Inter,'Segoe UI',Arial,sans-serif;font-size:14px;color:#a8a29e;line-height:1.7;padding-bottom:4px;">
+                    Si tienes alguna pregunta o deseas realizar una nueva reserva, no dudes en contactarnos. Estaremos encantados de atenderte.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr th:insert="layout :: footer"></tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

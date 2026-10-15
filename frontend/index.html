@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es-CO">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#7c1d1d" />
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.jpg" />
+
+  <!--
+    No hay title, description, canonical, og:site_name, og:locale ni el resto
+    de Open Graph de ruta aquí a propósito.
+
+    SEOHead los escribe por página, pero react-helmet-async no sustituye las
+    etiquetas estáticas del index.html: las añade al final del <head>. Con las
+    dos fuentes duplicadas, cada página acababa sirviendo dos títulos y dos
+    canonicales —el primero siempre el de la portada— y Google se quedaba con
+    el que quisiera. og:site_name y og:locale, que son iguales en todas las
+    rutas, también se duplicaban; ahora solo los emite SEOHead y el modo sin
+    navegador de scripts/prerender.mjs los escribe en el shell.
+
+    scripts/prerender.mjs vuelca el HTML ya renderizado en dist/, de modo que
+    el archivo guardado también llega con sus etiquetas.
+  -->
+
+  <!--
+    No hay preconnect a fonts.googleapis.com: las tipografías se empaquetan
+    desde @fontsource y las sirve el mismo origen que el CSS. Los preconnect
+    anteriores abrían dos conexiones TLS a orígenes que nunca se contactan.
+  -->
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>

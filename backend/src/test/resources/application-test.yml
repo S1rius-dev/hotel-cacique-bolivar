@@ -1,0 +1,55 @@
+# Perfil TEST — H2 en memoria (no requiere MySQL)
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL;NON_KEYWORDS=YEAR,VALUE,KEY
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.H2Dialect
+  flyway:
+    enabled: false
+  mail:
+    host: localhost
+    port: 3025
+    username:
+    password:
+
+logging:
+  level:
+    root: warn
+    org.hibernate.SQL: warn
+    org.hibernate.type.descriptor.sql.BasicBinder: warn
+    com.hotelcaciquebolivar: warn
+
+app:
+  jwt:
+    # Clave de prueba (32 bytes Base64) — solo para tests
+    secret: dGVzdC1qd3Qtc2VjcmV0LXRlc3Qtand0LXNlY3JldC10ZXN0LWp3dC1zZWNyZXQ=
+  cookie:
+    secure: false
+  payments:
+    wompi:
+      base-url: https://sandbox.wompi.co/v1
+    bold:
+      base-url: https://sandbox.bold.co
+  # mysqldump no puede volcar H2, por lo que el sistema queda deshabilitado en tests.
+  # Los servicios se prueban con mocks; el almacenamiento local si usa disco real.
+  backup:
+    enabled: false
+    schedule:
+      enabled: false
+      cleanup-enabled: false
+    storage:
+      dir: target/test-backups
+
+# Datos de admin para tests (evita placeholder failure en AdminDataInitializer)
+ADMIN_EMAIL: test@test.com
+ADMIN_USERNAME: test-admin
+ADMIN_PASSWORD: test123
+MIGRACION_CLIENTES_AUTO: false

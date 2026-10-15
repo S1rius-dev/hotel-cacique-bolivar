@@ -1,0 +1,101 @@
+# Configuración común a todos los entornos
+# Perfiles: dev (MySQL local + .env), test (H2), prod (MySQL/MariaDB + env Windows)
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  application:
+    name: hotel-cacique-bolivar
+  # Propiedades SMTP comunes (host/port/credentials se definen por perfil)
+  # Defaults en común para que el arranque sin perfil no falle por Mail antes del ProfileValidator
+  mail:
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:3025}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+server:
+  port: ${SERVER_PORT:8080}
+
+app:
+  # Orígenes permitidos para CORS, separados por coma. Por defecto, solo el
+  # frontend local de Vite; en producción se sobreescribe con CORS_ALLOWED_ORIGINS.
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+  jwt:
+    # Sin default en prod/dev; test lo sobreescribe con valor literal. Fail-fast vía JwtService/ProdValidator.
+    secret: ${JWT_SECRET:}
+    expiration-ms: ${JWT_EXPIRATION:3600000}
+    refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION:604800000}
+  mail:
+    from: ${MAIL_FROM:no-reply@example.com}
+    sender-name: ${MAIL_SENDER_NAME:Hotel Cacique Bolívar}
+    base-url: ${APP_BASE_URL:https://demo.example.com}
+    logo-url: ${MAIL_LOGO_URL:https://demo.example.com/images/logo.png}
+  google:
+    client-id: ${GOOGLE_CLIENT_ID:}
+  reservations:
+    payment-expiration-minutes: ${PAYMENT_EXPIRATION_MINUTES:20}
+  payments:
+    gateway: ${PAYMENTS_GATEWAY:}
+    moneda: ${PAYMENTS_CURRENCY:COP}
+    wompi:
+      public-key: ${WOMPI_PUBLIC_KEY:}
+      private-key: ${WOMPI_PRIVATE_KEY:}
+      events-key: ${WOMPI_EVENTS_KEY:}
+      integrity-key: ${WOMPI_INTEGRITY_KEY:}
+      # base-url, redirect-url y webhook-url se definen por perfil
+      redirect-url: ${WOMPI_REDIRECT_URL:}
+      webhook-url: ${WOMPI_WEBHOOK_URL:}
+    bold:
+      public-key: ${BOLD_PUBLIC_KEY:}
+      private-key: ${BOLD_PRIVATE_KEY:}
+      identity-key: ${BOLD_IDENTITY_KEY:}
+      secret-key: ${BOLD_SECRET_KEY:}
+      base-url: ${BOLD_BASE_URL:}
+      redirect-url: ${BOLD_REDIRECT_URL:}
+      webhook-url: ${BOLD_WEBHOOK_URL:}
+  cookie:
+    # Compatibilidad con variable legacy COOKIE_SECURE; perfiles la sobreescriben
+    secure: ${COOKIE_SECURE:false}
+  backup:
+    # Sistema de copias de seguridad. Deshabilitado por defecto: activar con BACKUP_ENABLED=true.
+    # La restauracion se expone solo como CLON a una base nueva (endpoints /verificar y /clonar).
+    # Nunca se restaura sobre la base configurada de la aplicacion; ese caso se rechaza.
+    enabled: ${BACKUP_ENABLED:false}
+    mysqldump-path: ${MYSQLDUMP_PATH:mysqldump}
+    # mysql no esta en el PATH de Windows, hay que darle la ruta completa.
+    mysql-path: ${MYSQL_PATH:mysql}
+    timeout-seconds: ${BACKUP_TIMEOUT_SECONDS:1800}
+    clon:
+      # Importar suele tardar mas que volcar, por eso tiene su propio timeout.
+      timeout-seconds: ${BACKUP_CLON_TIMEOUT_SECONDS:3600}
+      default-prefix: ${BACKUP_CLON_DEFAULT_PREFIX:hotel_restaurada_}
+    storage:
+      # Proveedor fisico. "local" escribe en disco; un proveedor de nube se agregara
+      # como nueva implementacion de BackupStorage sin cambiar BackupService.
+      provider: ${BACKUP_STORAGE_PROVIDER:local}
+      dir: ${BACKUP_STORAGE_DIR:./backups}
+      folder-automatic: ${BACKUP_STORAGE_FOLDER_AUTOMATIC:automatic}
+      folder-manual: ${BACKUP_STORAGE_FOLDER_MANUAL:manual}
+    schedule:
+      enabled: ${BACKUP_SCHEDULE_ENABLED:false}
+      cron: ${BACKUP_SCHEDULE_CRON:0 0 2 * * *}
+      # Fijar la zona es obligatorio: el servidor puede operar en UTC mientras
+      # el hotel opera en America/Bogota.
+      zone: ${BACKUP_SCHEDULE_ZONE:America/Bogota}
+      cleanup-enabled: ${BACKUP_CLEANUP_ENABLED:true}
+      cleanup-cron: ${BACKUP_CLEANUP_CRON:0 30 3 * * *}
+    retention:
+      # Un valor negativo significa que nunca se borra.
+      automatic-days: ${BACKUP_RETENTION_AUTOMATIC_DAYS:30}
+      manual-days: ${BACKUP_RETENTION_MANUAL_DAYS:-1}

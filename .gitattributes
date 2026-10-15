@@ -1,0 +1,20 @@
+# Normalización de finales de línea y detección de binarios.
+# El repositorio almacena texto con LF; el checkout se adapta por sistema operativo.
+* text=auto
+
+# Archivos binarios que no deben normalizarse
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.ico  binary
+*.svg  text
+*.woff  binary
+*.woff2 binary
+*.ttf  binary
+*.eot  binary
+*.pdf  binary
+*.gz   binary
+*.jar  binary
+*.sql  text

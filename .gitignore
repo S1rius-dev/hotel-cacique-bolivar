@@ -1,0 +1,53 @@
+# ──────────────────────────────────────────────────────────────
+# Hotel Cacique Bolívar — .gitignore del monorepo
+# Cada módulo conserva además su propio .gitignore (backend/, frontend/).
+# ──────────────────────────────────────────────────────────────
+
+# ── Variables de entorno y secretos ────────────────────────────
+.env
+.env.local
+.env.*.local
+*.env.local
+
+# ── Backups y volcados de base de datos (contienen datos reales) ─
+backend/backups/
+*.sql.gz
+*.sql
+
+# ── Datos de terceros/clientes reales (no versionar) ────────────
+backend/src/main/resources/data/migration-client.csv
+
+# ── Java / Maven ────────────────────────────────────────────────
+target/
+*.class
+!.mvn/wrapper/maven-wrapper.jar
+
+# ── Node / pnpm ─────────────────────────────────────────────────
+node_modules/
+dist/
+dist-ssr/
+*.local
+pnpm-debug.log*
+npm-debug.log*
+yarn-error.log*
+
+# ── Herramientas locales (CodeGraph, agentes) ──────────────────
+.codegraph/
+.agents/
+.claude/
+skills-lock.json
+
+# ── IDE / Sistema operativo ─────────────────────────────────────
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/*
+!.vscode/extensions.json
+.vs/
+.DS_Store
+Thumbs.db
+
+# ── Logs ────────────────────────────────────────────────────────
+*.log
+logs/

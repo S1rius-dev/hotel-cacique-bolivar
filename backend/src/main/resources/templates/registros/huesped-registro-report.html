@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 12mm 12mm 14mm 12mm;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 8.5px;
+            color: #1f2937;
+            background: #ffffff;
+            line-height: 1.4;
+        }
+
+        /* =========================================================
+           PALETA ROSE (Tailwind)
+           ========================================================= */
+
+        :root {
+            --rose-50: #fff1f2;
+            --rose-100: #ffe4e6;
+            --rose-200: #fecdd3;
+            --rose-300: #fda4af;
+            --rose-400: #fb7185;
+            --rose-500: #f43f5e;
+            --rose-600: #e11d48;
+            --rose-700: #be123c;
+            --rose-800: #9f1239;
+            --rose-900: #881337;
+            --rose-950: #4c0519;
+
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        /* =========================================================
+           HEADER
+           ========================================================= */
+
+        .header {
+            position: relative;
+            min-height: 70px;
+            padding: 0 0 14px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 14px;
+        }
+
+        .header-content {
+            width: 100%;
+            display: table;
+        }
+
+        .header-logo {
+            display: table-cell;
+            width: 18%;
+            vertical-align: middle;
+        }
+
+        .header-logo img {
+            max-width: 115px;
+            max-height: 52px;
+        }
+
+        .header-title {
+            display: table-cell;
+            width: 57%;
+            vertical-align: middle;
+            padding-left: 8px;
+        }
+
+        .header-title .hotel-name {
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--rose-800);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 3px;
+        }
+
+        .header-title h1 {
+            font-size: 19px;
+            color: var(--rose-950);
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            margin-bottom: 2px;
+        }
+
+        .header-title h2 {
+            font-size: 8.5px;
+            color: var(--muted);
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        .header-date {
+            display: table-cell;
+            width: 25%;
+            vertical-align: middle;
+            text-align: right;
+        }
+
+        .header-date .date-label {
+            font-size: 7px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 2px;
+        }
+
+        .header-date .date {
+            font-size: 8.5px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .header-accent {
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 85px;
+            height: 3px;
+            background: var(--rose-800);
+        }
+
+        /* =========================================================
+           SUMMARY CARDS
+           ========================================================= */
+
+        .summary {
+            width: 100%;
+            display: table;
+            table-layout: fixed;
+            margin-bottom: 13px;
+        }
+
+        .summary-card {
+            display: table-cell;
+            vertical-align: middle;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 9px 12px;
+        }
+
+        .summary-card+.summary-card {
+            margin-left: 8px;
+        }
+
+        .summary-card.total {
+            width: 25%;
+            border-left: 3px solid var(--rose-800);
+        }
+
+        .summary-card.period {
+            width: 45%;
+            border-left: 3px solid var(--rose-600);
+        }
+
+        .summary-card.filters-count {
+            width: 30%;
+            border-left: 3px solid #64748b;
+        }
+
+        .summary-label {
+            font-size: 6.8px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.9px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .summary-value {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .summary-value.large {
+            font-size: 15px;
+            color: var(--rose-800);
+        }
+
+        /* =========================================================
+           FILTERS
+           ========================================================= */
+
+        .filters {
+            background: var(--rose-50);
+            border: 1px solid var(--rose-200);
+            border-radius: 5px;
+            padding: 8px 11px;
+            margin-bottom: 12px;
+        }
+
+        .filters-title {
+            color: var(--rose-950);
+            font-size: 7px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .filter-items {
+            color: #4c0519;
+            font-size: 7.8px;
+        }
+
+        .filter-item {
+            display: inline-block;
+            background: #ffffff;
+            border: 1px solid var(--rose-200);
+            border-radius: 3px;
+            padding: 3px 6px;
+            margin-right: 4px;
+        }
+
+        .filter-label {
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .filter-value {
+            color: var(--rose-950);
+            font-weight: 700;
+        }
+
+        /* =========================================================
+           TABLE CONTAINER
+           ========================================================= */
+
+        .table-wrapper {
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        /* =========================================================
+           TABLE
+           ========================================================= */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 7.8px;
+        }
+
+        thead {
+            background: var(--rose-900);
+        }
+
+        thead th {
+            color: #ffffff;
+            padding: 7px 6px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 7.2px;
+            text-transform: uppercase;
+            letter-spacing: 0.45px;
+            border-right: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        thead th:last-child {
+            border-right: none;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #edf0f2;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        tbody td {
+            padding: 7px 6px;
+            color: #374151;
+            vertical-align: middle;
+        }
+
+        /* =========================================================
+           COLUMNAS
+           ========================================================= */
+
+        th.col-number,
+        td.col-number {
+            width: 4%;
+            text-align: center;
+        }
+
+        th.col-room,
+        td.col-room {
+            width: 8%;
+            text-align: center;
+        }
+
+        th.col-type,
+        td.col-type {
+            width: 13%;
+        }
+
+        th.col-id,
+        td.col-id {
+            width: 11%;
+        }
+
+        th.col-name,
+        td.col-name {
+            width: 18%;
+        }
+
+        th.col-reservation,
+        td.col-reservation {
+            width: 13%;
+        }
+
+        th.col-date,
+        td.col-date {
+            width: 11%;
+        }
+
+        th.col-status,
+        td.col-status {
+            width: 11%;
+            text-align: center;
+        }
+
+        /* =========================================================
+           NUMBER
+           ========================================================= */
+
+        .row-number {
+            color: #9ca3af;
+            font-size: 7px;
+            font-weight: 700;
+        }
+
+        /* =========================================================
+           ROOM
+           ========================================================= */
+
+        .room-number {
+            display: inline-block;
+            min-width: 25px;
+            padding: 3px 5px;
+            background: var(--rose-50);
+            border: 1px solid var(--rose-200);
+            border-radius: 3px;
+            color: var(--rose-950);
+            font-weight: 700;
+            text-align: center;
+        }
+
+        /* =========================================================
+           GUEST NAME
+           ========================================================= */
+
+        .guest-name {
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .guest-id {
+            color: #6b7280;
+        }
+
+        /* =========================================================
+           RESERVATION CODE
+           ========================================================= */
+
+        .reservation-code {
+            display: inline-block;
+            padding: 3px 5px;
+            background: var(--rose-50);
+            border: 1px solid var(--rose-200);
+            border-radius: 3px;
+            color: #475569;
+            font-size: 7px;
+            font-weight: 600;
+        }
+
+        /* =========================================================
+           DATES
+           ========================================================= */
+
+        .date-value {
+            color: #4b5563;
+            white-space: nowrap;
+        }
+
+        /* =========================================================
+           STATUS BADGES
+           ========================================================= */
+
+        .estado-badge {
+            display: inline-block;
+            min-width: 60px;
+            padding: 3px 7px;
+            border-radius: 10px;
+            font-size: 6.8px;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+        }
+
+        .estado-CHECKIN {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .estado-CHECKOUT {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+
+        .estado-CANCELADO {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .estado-RESERVADO {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        /* =========================================================
+           NO DATA
+           ========================================================= */
+
+        .no-data {
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 45px 20px;
+            text-align: center;
+            background: #fafafa;
+        }
+
+        .no-data-icon {
+            width: 38px;
+            height: 38px;
+            margin: 0 auto 9px auto;
+            border-radius: 50%;
+            background: var(--rose-50);
+            border: 1px solid var(--rose-200);
+            line-height: 38px;
+            font-size: 16px;
+            color: var(--rose-800);
+        }
+
+        .no-data-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 3px;
+        }
+
+        .no-data-text {
+            font-size: 8px;
+            color: var(--muted);
+        }
+
+        /* =========================================================
+           FOOTER
+           ========================================================= */
+
+        .footer {
+            margin-top: 13px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
+            width: 100%;
+            display: table;
+        }
+
+        .footer-left {
+            display: table-cell;
+            width: 65%;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .footer-right {
+            display: table-cell;
+            width: 35%;
+            text-align: right;
+            vertical-align: middle;
+        }
+
+        .footer-total {
+            font-size: 7.8px;
+            color: #374151;
+        }
+
+        .footer-total strong {
+            color: var(--rose-800);
+            font-size: 9px;
+        }
+
+        .footer-brand {
+            font-size: 7px;
+            color: #9ca3af;
+        }
+
+        .footer-system {
+            font-size: 6.8px;
+            color: #9ca3af;
+        }
+
+        /* =========================================================
+           PRINT
+           ========================================================= */
+
+        tr {
+            page-break-inside: avoid;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =============================================================
+     HEADER
+     ============================================================= -->
+
+    <div class="header">
+        <div class="header-content">
+            <div class="header-logo">
+                <img th:src="'data:image/png;base64,' + ${logoBase64}" alt="Hotel Cacique Bolívar" />
+            </div>
+
+            <div class="header-title">
+                <div class="hotel-name">
+                    Hotel Cacique Bolívar
+                </div>
+                <h1>
+                    Registro de Huéspedes
+                </h1>
+                <h2>
+                    Historial de Alojamientos
+                </h2>
+            </div>
+
+            <div class="header-date">
+                <div class="date-label">
+                    Documento generado
+                </div>
+
+                <div class="date" th:text="${fechaGeneracion}"></div>
+            </div>
+        </div>
+        <div class="header-accent"></div>
+    </div>
+    <!-- =============================================================
+     RESUMEN
+     ============================================================= -->
+    <div class="summary">
+        <div class="summary-card total">
+            <div class="summary-label">
+                Total de registros
+            </div>
+            <div class="summary-value large" th:text="${totalRegistros}">
+            </div>
+
+        </div>
+
+
+        <div class="summary-card period">
+
+            <div class="summary-label">
+                Período consultado
+            </div>
+
+            <div class="summary-value" th:text="${fechaConsulta}">
+            </div>
+
+        </div>
+
+
+        <div class="summary-card filters-count">
+
+            <div class="summary-label">
+                Información del reporte
+            </div>
+
+            <div class="summary-value">
+                Historial de alojamientos
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =============================================================
+     FILTROS
+     ============================================================= -->
+
+    <div class="filters"
+        th:if="${habitacion != null or tipoHabitacionId != null or busqueda != null or estado != null}">
+
+        <div class="filters-title">
+            Filtros aplicados
+        </div>
+
+        <div class="filter-items">
+
+            <span class="filter-item" th:if="${habitacion != null}">
+
+                <span class="filter-label">
+                    Habitación:
+                </span>
+
+                <span class="filter-value" th:text="${habitacion}">
+                </span>
+
+            </span>
+
+
+            <span class="filter-item" th:if="${tipoHabitacionId != null}">
+
+                <span class="filter-label">
+                    Tipo ID:
+                </span>
+
+                <span class="filter-value" th:text="${tipoHabitacionId}">
+                </span>
+
+            </span>
+
+
+            <span class="filter-item" th:if="${busqueda != null and !busqueda.isEmpty()}">
+
+                <span class="filter-label">
+                    Búsqueda:
+                </span>
+
+                <span class="filter-value" th:text="'&quot;' + ${busqueda} + '&quot;'">
+                </span>
+
+            </span>
+
+
+            <span class="filter-item" th:if="${estado != null and !estado.isEmpty()}">
+
+                <span class="filter-label">
+                    Estado:
+                </span>
+
+                <span class="filter-value" th:text="${estado}">
+                </span>
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =============================================================
+     SIN RESULTADOS
+     ============================================================= -->
+
+    <div th:if="${#lists.isEmpty(registros)}" class="no-data">
+
+        <div class="no-data-icon">
+            —
+        </div>
+
+        <div class="no-data-title">
+            No se encontraron registros
+        </div>
+
+        <div class="no-data-text">
+            No existen alojamientos que coincidan con los filtros aplicados.
+        </div>
+
+    </div>
+
+
+    <!-- =============================================================
+     TABLA
+     ============================================================= -->
+
+    <div class="table-wrapper" th:unless="${#lists.isEmpty(registros)}">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th class="col-number">
+                        #
+                    </th>
+
+                    <th class="col-room">
+                        Hab.
+                    </th>
+
+                    <th class="col-type">
+                        Tipo de habitación
+                    </th>
+
+                    <th class="col-id">
+                        Cédula
+                    </th>
+
+                    <th class="col-name">
+                        Huésped
+                    </th>
+
+                    <th class="col-reservation">
+                        Reserva
+                    </th>
+
+                    <th class="col-date">
+                        Check-In
+                    </th>
+
+                    <th class="col-date">
+                        Check-Out
+                    </th>
+
+                    <th class="col-status">
+                        Estado
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <tr th:each="reg, iter : ${registros}">
+
+                    <!-- Número -->
+
+                    <td class="col-number">
+
+                        <span class="row-number" th:text="${iter.index + 1}">
+                        </span>
+
+                    </td>
+
+
+                    <!-- Habitación -->
+
+                    <td class="col-room">
+
+                        <span class="room-number" th:text="${reg.numeroHabitacion}">
+                        </span>
+
+                    </td>
+
+
+                    <!-- Tipo -->
+
+                    <td class="col-type" th:text="${reg.tipoHabitacion}">
+                    </td>
+
+
+                    <!-- Cédula -->
+
+                    <td class="col-id">
+
+                        <span class="guest-id" th:text="${reg.cedula}">
+                        </span>
+
+                    </td>
+
+
+                    <!-- Huésped -->
+
+                    <td class="col-name">
+
+                        <span class="guest-name" th:text="${reg.nombreCompleto}">
+                        </span>
+
+                    </td>
+
+
+                    <!-- Reserva -->
+
+                    <td class="col-reservation">
+
+                        <span class="reservation-code" th:text="${reg.codigoReserva}">
+                        </span>
+
+                    </td>
+
+
+                    <!-- Check-In -->
+
+                    <td class="col-date">
+
+                        <span class="date-value" th:text="${reg.fechaCheckIn}">
+                        </span>
+
+                    </td>
+
+
+                    <!-- Check-Out -->
+
+                    <td class="col-date">
+
+                        <span class="date-value" th:text="${reg.fechaCheckOut}">
+                        </span>
+
+                    </td>
+
+
+                    <!-- Estado -->
+
+                    <td class="col-status">
+
+                        <span th:text="${reg.estadoDetalle}" th:class="'estado-badge estado-' + ${reg.estadoDetalle}">
+                        </span>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- =============================================================
+     FOOTER
+     ============================================================= -->
+
+    <div class="footer">
+
+        <div class="footer-left">
+
+            <div class="footer-total">
+
+                Total de registros:
+                <strong th:text="${totalRegistros}">
+                </strong>
+
+            </div>
+
+            <div class="footer-brand">
+                Hotel Cacique Bolívar
+            </div>
+
+        </div>
+
+
+        <div class="footer-right">
+
+            <div class="footer-system">
+                Sistema de Gestión de Reservas
+            </div>
+
+            <div class="footer-system">
+                Documento generado automáticamente
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

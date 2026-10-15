@@ -1,0 +1,36 @@
+# docker-compose.yml — solo MySQL para desarrollo/demostración.
+#
+# Levanta una base de datos local lista para que el backend aplique las
+# migraciones Flyway al arrancar. No contiene secretos reales: las credenciales
+# son valores de ejemplo y coinciden con backend/.env.example.
+#
+#   docker compose up -d
+#   # luego, en backend:  Copy-Item .env.example .env  y  .\mvnw.cmd spring-boot:run
+#
+# El backend NO va en Docker: se ejecuta con Maven Wrapper para conservar su
+# flujo de compilación nativo.
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: hotel-cacique-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: demo_root_password
+      MYSQL_DATABASE: hotelcaciquebolivar
+      MYSQL_USER: hoteldemo
+      MYSQL_PASSWORD: demo_password
+    ports:
+      - "3306:3306"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - hotel-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  hotel-mysql-data:
